@@ -5,20 +5,14 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
     const { product_id, shop_id, shelf_quantity, order_quantity } = req.body;
-    
-    const client = await pool.connect();
 
     try {
-        await client.query('BEGIN');
-
-        const inventoryResult = await client.query(
+        const inventoryResult = await pool.query(
             'INSERT INTO inventories (product_id, shop_id, shelf_quantity, order_quantity) VALUES ($1, $2, $3, $4) RETURNING *', 
             [product_id, shop_id, shelf_quantity, order_quantity]
         );
 
         const newInventoryId = inventoryResult.rows[0].id;
-
-        await client.query('COMMIT');
 
         await axios.post('http://history-service:3002/events', {
             inventory_id: newInventoryId,
@@ -32,10 +26,7 @@ router.post('/', async (req, res) => {
         
         res.status(201).json(inventoryResult.rows[0]);
     } catch (error) {
-        await client.query('ROLLBACK');
         res.status(500).json({ error: error.message });
-    } finally {
-        client.release();
     }
 });
 
@@ -46,12 +37,9 @@ router.patch('/:id/increase', async (req, res) => {
     shelf_quantity = shelf_quantity || 0;
     order_quantity = order_quantity || 0;
 
-    const client = await pool.connect();
 
     try {
-        await client.query('BEGIN');
-
-        const inventoryResult = await client.query(
+        const inventoryResult = await pool.query(
             'SELECT shelf_quantity, order_quantity FROM inventories WHERE id = $1 FOR UPDATE', 
             [id]
         );
@@ -59,12 +47,10 @@ router.patch('/:id/increase', async (req, res) => {
         const oldShelfQuantity = inventoryResult.rows[0].shelf_quantity;
         const oldOrderQuantity = inventoryResult.rows[0].order_quantity;
 
-        const updatedResult = await client.query(
+        const updatedResult = await pool.query(
             'UPDATE inventories SET shelf_quantity = shelf_quantity + $1, order_quantity = order_quantity + $2 WHERE id = $3 RETURNING *', 
             [shelf_quantity, order_quantity, id]
         );
-
-        await client.query('COMMIT');
 
         await axios.post('http://history-service:3002/events', {
             inventory_id: id,
@@ -77,10 +63,7 @@ router.patch('/:id/increase', async (req, res) => {
 
         res.json(updatedResult.rows[0]);
     } catch (error) {
-        await client.query('ROLLBACK');
         res.status(500).json({ error: error.message });
-    } finally {
-        client.release();
     }
 });
 
@@ -91,12 +74,8 @@ router.patch('/:id/decrease', async (req, res) => {
     shelf_quantity = shelf_quantity || 0;
     order_quantity = order_quantity || 0;
 
-    const client = await pool.connect();
-
     try {
-        await client.query('BEGIN');
-
-        const inventoryResult = await client.query(
+        const inventoryResult = await pool.query(
             'SELECT shelf_quantity, order_quantity FROM inventories WHERE id = $1 FOR UPDATE', 
             [id]
         );
@@ -108,12 +87,10 @@ router.patch('/:id/decrease', async (req, res) => {
             throw new Error('Недостаточно товара');
         }
 
-        const updatedResult = await client.query(
+        const updatedResult = await pool.query(
             'UPDATE inventories SET shelf_quantity = shelf_quantity - $1, order_quantity = order_quantity - $2 WHERE id = $3 RETURNING *', 
             [shelf_quantity, order_quantity, id]
         );
-
-        await client.query('COMMIT');
 
         await axios.post('http://history-service:3002/events', {
             inventory_id: id,
@@ -126,10 +103,7 @@ router.patch('/:id/decrease', async (req, res) => {
 
         res.json(updatedResult.rows[0]);
     } catch (error) {
-        await client.query('ROLLBACK');
         res.status(500).json({ error: error.message });
-    } finally {
-        client.release();
     }
 });
 
