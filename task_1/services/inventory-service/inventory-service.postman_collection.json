@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "99858e42-66fa-478c-8da2-b38bde7806b7",
+		"name": "inventory-service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39886009"
+	},
+	"item": [
+		{
+			"name": "/products",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"plu\": 1,\n    \"name\": \"Ложка\",\n    \"description\": \"Незаменимый столовый прибор.\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3001/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"products"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Ложка",
+							"disabled": true
+						},
+						{
+							"key": "plu",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/inventories",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"product_id\": 1,\n    \"shop_id\": 1,\n    \"shelf_quantity\": 1,\n    \"order_quantity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/inventories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"inventories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/inventories",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/inventories",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"inventories"
+					],
+					"query": [
+						{
+							"key": "plu",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "shop_id",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "min_shelf_quantity",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "max_shelf_quantity",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "min_order_quantity",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "max_order_quantity",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/inventories increase",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"shelf_quantity\": 1,\n    \"order_quantity\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/inventories/1/increase",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"inventories",
+						"1",
+						"increase"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/inventories decrease",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"shelf_quantity\": 1,\n    \"order_quantity\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3001/inventories/1/decrease",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3001",
+					"path": [
+						"inventories",
+						"1",
+						"decrease"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
