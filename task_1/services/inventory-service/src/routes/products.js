@@ -3,11 +3,11 @@ const pool = require('../db');
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    const { plu, name } = req.body;
+    const { plu, name, description } = req.body;
     try {
         const result = await pool.query(
-            'INSERT INTO products (plu, name) VALUES ($1, $2) RETURNING *', 
-            [plu, name]
+            'INSERT INTO products (plu, name, description) VALUES ($1, $2, $3) RETURNING *', 
+            [plu, name, description]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
