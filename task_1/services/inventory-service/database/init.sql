@@ -26,7 +26,16 @@ CREATE TABLE IF NOT EXISTS inventory_logs (
     action VARCHAR(50) NOT NULL,
     old_shelf_quantity INTEGER,
     new_shelf_quantity INTEGER,
-    old_order_quantity INTEGER, 
+    old_order_quantity INTEGER,
     new_order_quantity INTEGER,
     changed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+INSERT INTO shops (id, name, address)
+VALUES
+    (1, 'Тестовый магаз', 'г. Москва, ул. Тестовая, д. 1'),
+    (2, 'Тестовый магазин', 'г. Санкт-Петербург, ул. Тестовая, д. 1')
+ON CONFLICT (id)
+DO UPDATE SET
+    name = EXCLUDED.name,
+    address = EXCLUDED.address;
