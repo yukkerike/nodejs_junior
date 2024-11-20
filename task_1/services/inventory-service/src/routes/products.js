@@ -1,12 +1,12 @@
-const express = require('express');
-const pool = require('../db');
+const express = require("express");
+const pool = require("../db");
 const router = express.Router();
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
     const { plu, name, description } = req.body;
     try {
         const result = await pool.query(
-            'INSERT INTO products (plu, name, description) VALUES ($1, $2, $3) RETURNING *', 
+            "INSERT INTO products (plu, name, description) VALUES ($1, $2, $3) RETURNING *",
             [plu, name, description]
         );
         res.status(201).json(result.rows[0]);
@@ -15,10 +15,10 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
     const { name, plu } = req.query;
     try {
-        let query = 'SELECT * FROM products WHERE 1=1';
+        let query = "SELECT * FROM products WHERE 1=1";
         const params = [];
         let paramIndex = 1;
 
