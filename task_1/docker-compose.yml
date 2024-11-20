@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: inventory_db
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./services/inventory-service/database:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+
+  inventory-service:
+    build: ./services/inventory-service
+    stdin_open: true
+    tty: true
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inventory_db
+
+  history-service:
+    build: ./services/history-service
+    stdin_open: true
+    tty: true
+    ports:
+      - "3002:3002"
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inventory_db
+
+
+volumes:
+  postgres_data:
