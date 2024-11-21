@@ -2,6 +2,7 @@ const express = require("express");
 const axios = require("axios");
 const pool = require("../db");
 const router = express.Router();
+const history_port = process.env.HISTORY_PORT || 3002;
 
 router.post("/", async (req, res) => {
     const { product_id, shop_id, shelf_quantity, order_quantity } = req.body;
@@ -14,7 +15,7 @@ router.post("/", async (req, res) => {
 
         const newInventoryId = inventoryResult.rows[0].id;
 
-        await axios.post("http://history-service:3002/events", {
+        await axios.post(`http://history-service:${history_port}/events`, {
             inventory_id: newInventoryId,
             action: "inventory_created",
             old_shelf_quantity: 0,
@@ -50,7 +51,7 @@ router.patch("/:id/increase", async (req, res) => {
             [shelf_quantity, order_quantity, id]
         );
 
-        await axios.post("http://history-service:3002/events", {
+        await axios.post(`http://history-service:${history_port}/events`, {
             inventory_id: id,
             action: "inventory_increased",
             old_shelf_quantity: oldShelfQuantity,
@@ -93,7 +94,7 @@ router.patch("/:id/decrease", async (req, res) => {
             [shelf_quantity, order_quantity, id]
         );
 
-        await axios.post("http://history-service:3002/events", {
+        await axios.post(`http://history-service:${history_port}/events`, {
             inventory_id: id,
             action: "inventory_decreased",
             old_shelf_quantity: oldShelfQuantity,

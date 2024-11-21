@@ -14,23 +14,21 @@ services:
     build: ./services/inventory-service
     stdin_open: true
     tty: true
-    ports:
-      - "3001:3001"
     depends_on:
       - postgres
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inventory_db
+    env_file: .env
+    ports:
+      - "${INVENTORY_PORT}:${INVENTORY_PORT}"
 
   history-service:
     build: ./services/history-service
     stdin_open: true
     tty: true
-    ports:
-      - "3002:3002"
     depends_on:
       - postgres
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/inventory_db
+    env_file: .env
+    ports:
+      - "${HISTORY_PORT}:${HISTORY_PORT}"
 
 
 volumes:

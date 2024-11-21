@@ -3,7 +3,7 @@ const eventsRouter = require("./routes/events");
 const historyRouter = require("./routes/history");
 
 const app = express();
-const port = 3002;
+const port = process.env.HISTORY_PORT || 3002;
 
 app.use(express.json());
 app.use("/events", eventsRouter);

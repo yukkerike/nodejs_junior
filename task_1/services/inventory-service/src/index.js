@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3001;
+const port = process.env.INVENTORY_PORT || 3001;
 
 const productsRouter = require("./routes/products");
 const inventoriesRouter = require("./routes/inventories");
