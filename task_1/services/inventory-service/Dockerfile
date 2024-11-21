@@ -7,6 +7,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3001
+EXPOSE $INVENTORY_PORT
 
 CMD ["npm", "start"]
